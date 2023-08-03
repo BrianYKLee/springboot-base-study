@@ -12,4 +12,9 @@ public class OrderController {
     public List<String> getOrders(){
         return List.of("A", "B", "C");
     }
+    @GetMapping
+    private List<String> createOrders(List<String> orderReq){
+
+        return orderReq;
+    }
 }
