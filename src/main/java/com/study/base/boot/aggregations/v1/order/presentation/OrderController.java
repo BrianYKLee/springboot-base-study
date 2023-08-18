@@ -12,7 +12,7 @@ public class OrderController {
     public List<String> getOrders(){
         return List.of("A", "B", "C");
     }
-    @GetMapping
+    @GetMapping//fsdf
     private List<String> createOrders(List<String> orderReq){
 
         return orderReq;
