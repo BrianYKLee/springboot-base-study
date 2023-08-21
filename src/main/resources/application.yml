@@ -8,7 +8,7 @@ spring:
     url: jdbc:mysql://127.0.0.1:3307/base?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: studydocker1!
+    password: studydocker1
   jpa:
     hibernate:
       ddl-auto: validate
