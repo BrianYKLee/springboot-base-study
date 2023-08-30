@@ -1,6 +1,13 @@
 server:
   port: 8000
 
+
+logging:
+  level:
+    org:
+      hibernate:
+        orm.jdbc.bind: trace # hibernate core 6.x
+#        type.descriptor.sql.BasicBinder: trace # hibernate core 5.x
 spring:
   application:
     name: springboot-base-study
