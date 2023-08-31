@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
@@ -37,6 +38,9 @@ public class OrderAggregate {
 
     private String orderNumber;
     private String orderName;
+
+    /*EnumType.STRING : 각 Enum 이름을 컬럼에 저장한다. ex) G, PG, PG13..
+    * EnumType.ORDINAL : 각 Enum에 대응되는 순서를 칼럼에 저장한다. ex) 0, 1, 2..*/
     @Enumerated(EnumType.STRING)
     private OrderStatusEnum status;
     private int price;

@@ -29,7 +29,7 @@ public class OrderController {
     }
 
     @Post
-    public List<Long> createOrders(@RequestBody @Valid CreateOrdersDto request) {
+    public List<Long> createOrders(@RequestBody @Valid CreateOrdersDto request) throws Exception {
         final List<CreateOrder> createOrderList = request.getCreateOrders().stream().map(CreateOrderDto::toCreate).toList();
         return orderService.createOrders(createOrderList);
     }
