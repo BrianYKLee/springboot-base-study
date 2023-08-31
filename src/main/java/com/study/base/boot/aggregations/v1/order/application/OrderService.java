@@ -27,7 +27,7 @@ public class OrderService {
                 .build()
                 .patch(createOrder)
                 .create(orderRepository);
-
+        orderRepository.save(orderAggregate);
     }
 
     @Transactional
