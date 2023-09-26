@@ -6,7 +6,6 @@ import lombok.ToString;
 
 @Builder
 @Getter
-@ToString
 public class CreateItemStock {
     private int stockQty;
 }

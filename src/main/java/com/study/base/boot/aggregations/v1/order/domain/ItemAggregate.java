@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 @Entity
 @Builder
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @DynamicInsert
 @EntityListeners(AuditingEntityListener.class)
 public class ItemAggregate {
@@ -64,7 +64,7 @@ public class ItemAggregate {
     }
 
     public static final List<ItemAggregate> creates(ItemRepository itemRepository, List<CreateItem> createItems) {
-        Assert.notEmpty(createItems, "Item is null");
+        Assert.notEmpty(createItems, "createItems is null");
 
         final var items = createItems.stream()
                 .map(createItem -> ItemAggregate.builder()

@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum ItemStatusEnum {
-    SELL("SELLING"),
-    STOP("DISCONTINUED");
+    SELL("selling"),
+    STOP("discontinued");
 
     private String status;
 

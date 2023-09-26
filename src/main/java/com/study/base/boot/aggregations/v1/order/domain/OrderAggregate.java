@@ -1,14 +1,13 @@
 package com.study.base.boot.aggregations.v1.order.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.study.base.boot.aggregations.v1.order.application.dto.req.CreateOrder;
 import com.study.base.boot.aggregations.v1.order.domain.entity.OrderItemEntity;
 import com.study.base.boot.aggregations.v1.order.domain.enumerations.OrderStatusEnum;
 import com.study.base.boot.aggregations.v1.order.infrastructure.repository.OrderRepository;
+import com.study.base.boot.config.mapstruct.base.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicInsert;
@@ -23,13 +22,15 @@ import java.util.List;
 
 @Table(catalog = "base", name = "order")
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @DynamicInsert
-@Builder
+@SuperBuilder
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public class OrderAggregate {
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+public class OrderAggregate extends BaseEntity {
+
+
     //jpa개념에서 Entity는 테이블이랑 맵핑되는 객체를 의미 어떤 테이블인지는 @Table에 정의
     //@DynamicInsert는 성능이슈가 있고 이미 자기 자신을 넣어주기때문에 사용하지 않음 .
     @Id
@@ -53,6 +54,7 @@ public class OrderAggregate {
     private LocalDateTime updatedDate;
 
     //fetch-> 조회할때 많이사용 -> LAZY= 조회가 나중에(items를 겟할때 조회가된다)
+    @JsonManagedReference
     @OneToMany(mappedBy = "order", fetch =  FetchType.LAZY, cascade =  CascadeType.PERSIST)
     private List<OrderItemEntity> items;
 
