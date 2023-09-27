@@ -13,7 +13,6 @@ class SprinbootBaseStudyApplicationTests {
 
     @Test
     void createOrders(){
-
     }
 
 }

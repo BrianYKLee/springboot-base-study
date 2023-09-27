@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 @Table(catalog = "base", name ="ItemStock")
 @Entity
 @SuperBuilder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @DynamicInsert
 @Getter
 @EntityListeners(AuditingEntityListener.class)

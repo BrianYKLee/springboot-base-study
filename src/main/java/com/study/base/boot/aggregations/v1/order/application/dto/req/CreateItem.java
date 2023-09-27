@@ -5,15 +5,17 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Builder
 @Getter
+@ToString
 public class CreateItem {
-    private String itemName;
+    String itemName;
 
-    private int price;
+    int price;
 
     private List<CreateItemStock> items;
 }

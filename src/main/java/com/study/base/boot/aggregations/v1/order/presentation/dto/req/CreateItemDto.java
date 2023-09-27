@@ -19,11 +19,10 @@ import java.util.stream.Collectors;
 @Builder
 @Getter
 public class CreateItemDto {
-    @NotNull
+    @NonNull
     String itemName;
 
-    @Enumerated(EnumType.STRING)
-    ItemStatusEnum status;
+
     @PositiveOrZero
     int price;
     @NotNull
