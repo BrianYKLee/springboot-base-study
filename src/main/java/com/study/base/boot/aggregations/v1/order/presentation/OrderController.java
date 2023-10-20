@@ -2,17 +2,19 @@ package com.study.base.boot.aggregations.v1.order.presentation;
 
 import com.study.base.boot.aggregations.v1.order.application.OrderService;
 import com.study.base.boot.aggregations.v1.order.application.dto.req.CreateOrder;
+import com.study.base.boot.aggregations.v1.order.application.dto.req.GetOrder;
+import com.study.base.boot.aggregations.v1.order.presentation.dto.req.GetOrderDto;
 import com.study.base.boot.aggregations.v1.order.domain.OrderAggregate;
-import com.study.base.boot.aggregations.v1.order.domain.entity.OrderItemEntity;
 import com.study.base.boot.aggregations.v1.order.domain.enumerations.OrderStatusEnum;
 import com.study.base.boot.aggregations.v1.order.presentation.dto.req.CreateOrderDto;
 import com.study.base.boot.aggregations.v1.order.presentation.dto.req.CreateOrdersDto;
 import com.study.base.boot.aggregations.v1.order.presentation.dto.res.OrderDto;
-import com.study.base.boot.aggregations.v1.order.presentation.dto.res.OrderItemDto;
 import com.study.base.boot.aggregations.v1.order.presentation.mapper.OrderEDMapper;
 import com.study.base.boot.config.annotations.Get;
+import com.study.base.boot.config.annotations.Patch;
 import com.study.base.boot.config.annotations.Post;
 import com.study.base.boot.config.annotations.RestApi;
+import com.study.base.boot.config.controller.SupportController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +28,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestApi("/v1/orders")
 @Slf4j
 @RequiredArgsConstructor
-public class OrderController {
+public class OrderController extends SupportController {
 
     private final OrderService orderService;
 
@@ -90,6 +92,7 @@ public class OrderController {
         //jpa는 null이나온 케이스가 없어서 stream을 박아도 NPE는 안뜬다.
     }
 
+
     @Get("/req")
     public Page<OrderDto> getOrdersByReq(LocalDateTime periodFrom,
                                          LocalDateTime periodTo,
@@ -107,4 +110,34 @@ public class OrderController {
 
         return new PageImpl<>(orderDtos, pageable, pageOrders.getTotalElements());
     }
+
+
+    @Get
+    public Page<OrderDto> getOrders2(
+         GetOrderDto request,
+         @PageableDefault(size =10, sort = "id", direction =Sort.Direction.DESC)Pageable pageable ) {
+
+        final GetOrder getOrder = request.toGetOrder(pageable);
+        final Page<OrderAggregate> pageOrders = orderService.list(getOrder);
+       /* final List<OrderAggregate> orders = pageOrders.getContent();
+
+        List<OrderDto> orderDtos = orders.stream()
+                .map(order -> orderEDMapper.toDto(order))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(orderDtos, pageable, pageOrders.getTotalElements());*/
+        return response(orderEDMapper, pageOrders, pageable);
+    }
+
+    //주문 상태 변경 API endpoint
+    //PUT과 PATCH가 데이터를 수정한다는 측면에서는 비슷하나, PUT이 데이터 전체를 갱신하는 HTTP 메서드라면, PATCH는 수정하는 영역만 갱신하는 HTTP 메서드이다.
+    @Patch("/{id}/status/{status}")
+    public void changeOrderStatus(
+          @PathVariable long id,
+          @PathVariable OrderStatusEnum status
+    ){
+        orderService.changeStatus(id, status);
+    }
+
+
 }

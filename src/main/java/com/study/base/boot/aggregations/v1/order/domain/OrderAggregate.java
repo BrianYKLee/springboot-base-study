@@ -94,4 +94,12 @@ public class OrderAggregate extends BaseEntity {
 
         return this;
     }
+
+    //주문 상태 변경 메소드 생성
+    public void changeOrder(){
+        this.status = OrderStatusEnum.ORDER;
+    }
+    public void changeCanceled() {
+        this.status = OrderStatusEnum.CANCELED;
+    }
 }
