@@ -1,10 +1,12 @@
 package com.study.base.boot.aggregations.v1.order.application;
 
 import com.study.base.boot.aggregations.v1.order.application.dto.req.CreateOrder;
+import com.study.base.boot.aggregations.v1.order.application.dto.req.GetOrder;
 import com.study.base.boot.aggregations.v1.order.domain.OrderAggregate;
 import com.study.base.boot.aggregations.v1.order.domain.entity.OrderItemEntity;
 import com.study.base.boot.aggregations.v1.order.domain.enumerations.OrderStatusEnum;
 import com.study.base.boot.aggregations.v1.order.infrastructure.repository.OrderRepository;
+import com.study.base.boot.aggregations.v1.order.infrastructure.repository.dto.req.OrderCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,5 +88,66 @@ public class OrderService {
         return allListByCondition;
     }
 
+    @Transactional(readOnly = true)
+    public Page<OrderAggregate> list(GetOrder request){
 
+        final OrderCondition condition = request.toCondition();
+        final  Page<OrderAggregate> pageOrders = orderRepository.getOrders(condition);
+        return pageOrders;
+    }
+
+    //주문 상태 변경 메소드 생성
+    @Transactional
+    public void changeStatus(long id, OrderStatusEnum status){
+      orderRepository.changeStatus(id, status);
+
+        /*  switch (status) {
+            case ORDER -> this.changeToOrder(id);
+            case CANCELED ->  this.changeToCanceled(id);
+            default ->  throw new IllegalArgumentException("Wrong Status");
+        }*/
+
+    }
+
+    @Transactional
+    public void changeToCanceled(long id){
+        final var orderOptional  = orderRepository.findById(id);
+
+        orderOptional.ifPresent(OrderAggregate::changeCanceled);
+    }
+    @Transactional
+    public void changeToOrder(long id){
+        final var orderOptional = orderRepository.findById(id);
+
+        orderOptional.ifPresent(order -> {
+            order.changeOrder();
+        });
+
+        /*// 배치 : 보통 100개에서 많으면 500개정도까지가 좋다. 개수를 끊어서 조회한다. 쿼리 성능이 더 좋아짐
+        배치는 모수가 클때 많이사용
+
+        JSON Web Token(JWT) 구조
+
+        HEADER(암호화 알고리즘,토큰타입).PAYLOAD.SIGNATURE
+
+        1. header.payload, signature로 구분
+        2. 마침표를 기준으로 구분
+        3. 각 영역의 json의 구조를 가진다.
+        4.토큰내에 정보가 있어 상태에 대한 정보를 따로 저장하지 않아도 된다ㅣ.
+        5. 토큰 탈취시 누구든지 호출할 수 있다.
+        6. 토큰 탈취에 대한 대안책 강구 필요-> 보통 refresh token 많이 사용
+
+        redis-> 데이터베이스 (NoSQL)  휘발성으로 단기간 저장해서 속도가 빠르다
+
+        jwt-> 모든 서버에서 동일하게사용가능, 상태를 저장하지 않기 떄문에 중복로그인 처리가 힘듬, 토큰 만료시 갱신안하면 로그인이 풀리는 이슈발생
+
+        만료시간의 길이(용도) 차리로 일반 jwt와 refresh token을 구분
+
+        session-> 서버별 세션이 생성, 상태를 서버의 세션에 저장하고 있기 떄문에 중복로그인 처리가 좋음, 서버 배포시 세션 클러스터링을 통해 배포되는 서버에 접속된 유저의 로그인이 유지되어야함
+
+         ** 세션 클러스터링: 2대 이상의 WAS 또는 서버를 사용할때 로드 밸런싱 장애 대비 등 세션을 공유하는 것
+
+        payload를 비대칭키 암호화를 한번더 하는 경우도 있다.-> 토큰 탈취시 해석을 못하게 하기위해
+        */
+    }
 }

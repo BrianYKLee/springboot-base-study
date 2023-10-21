@@ -14,8 +14,8 @@ import java.util.List;
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)//null인경우 매핑안함
 public interface OrderEDMapper extends SupportEntityToDtoMapper<OrderAggregate, OrderDto> {
 
-    @Condition
+   /* @Condition
     default  boolean isLazyLoaded(List<? extends BaseEntity> entities){
         return isLoaded(entities);
-    }
+    }*/
 }

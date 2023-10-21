@@ -54,3 +54,7 @@ springdoc:
     disable-swagger-default-url: true
 
     display-query-params-without-oauth2: true
+
+jwt:
+  access-token:
+    key: spring-boot-base-study-auth
